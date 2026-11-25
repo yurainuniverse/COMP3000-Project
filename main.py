@@ -1,5 +1,9 @@
+from database.database_manager import init_database
+
 def main():
-   print("Starting the database connection test...")
+      init_database()
+      print("Database initialized successfully.")
+      
    
 if __name__ == "__main__":
        main()
