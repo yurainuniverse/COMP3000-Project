@@ -134,4 +134,21 @@ def delete_session(session_id):
          return cursor.rowcount>0
 
 
+def add_message(session_id, role, content):
 
+     with closing(get_connection()) as conn:
+
+          cursor=conn.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)", (session_id, role, content))
+
+          conn.commit()
+
+          return cursor.lastrowid
+
+
+
+def get_messages(session_id):
+
+     with closing(get_connection()) as conn:
+
+          rows=conn.execute("SELECT * FROM messages WHERE session_id=? ORDER BY created_at ASC,id ASC", (session_id,)).fetchall()
+          return [dict(row) for row in rows]
