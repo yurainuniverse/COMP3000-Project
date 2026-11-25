@@ -1,12 +1,14 @@
 import sqlite3
 
-from config.database_config import(DATABASE_PATH, DATABASE_TIMEOUT)
+from contextlib import closing
+
+
+from config.database_config import(DATABASE_PATH, DATABASE_TIMEOUT, SCHEMA_PATH)
 
 
 def get_connection():
 
-    if not DATABASE_PATH.is_file():
-        raise FileNotFoundError(f"Database file not found at {DATABASE_PATH}")
+    schema = SCHEMA_PATH.read_text(encoding="utf-8")
 
 
 
@@ -18,3 +20,15 @@ def get_connection():
 
 
     return conn
+
+def init_database():
+
+    schema = SCHEMA_PATH.read_text(encoding="utf-8")
+
+    with closing(get_connection()) as conn:
+
+        conn.executescript(schema)
+
+        conn.commit()
+
+    print("Database initialized successfully.")
