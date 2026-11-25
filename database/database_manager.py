@@ -93,4 +93,45 @@ def delete_memory(memory_id):
                 return cursor.rowcount>0
 
 
-            
+def create_session(title=None):
+     
+     
+     with closing(get_connection()) as conn:
+         cursor=conn.execute("INSERT INTO conversation_sessions(title) VALUES (?)", (title,))
+
+         conn.commit()
+
+         return cursor.lastrowid
+
+
+def get_sessions():
+
+     with closing(get_connection()) as conn:
+            rows=conn.execute("SELECT * FROM conversation_sessions ORDER BY started_at DESC,id DESC").fetchall()
+    
+            return [dict(row) for row in rows]
+
+
+def update_session_title(session_id,title):
+    with closing(get_connection()) as conn:
+        cursor=conn.execute("UPDATE conversation_sessions SET title=? WHERE id=?", (title,session_id))
+
+        conn.commit()
+
+        return cursor.rowcount>0
+
+
+
+
+
+def delete_session(session_id):
+
+     with closing(get_connection()) as conn:
+         cursor=conn.execute("DELETE FROM conversation_sessions WHERE id=?", (session_id,))
+
+         conn.commit()
+
+         return cursor.rowcount>0
+
+
+
